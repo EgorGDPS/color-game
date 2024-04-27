@@ -2,16 +2,16 @@ import tkinter as tk
 import random
 import tkinter.font as tkFont
 
-colours = ['red', 'blue', 'green', 'pink', 'black', 'yellow', 'orange', 'cyan', 'purple', 'brown', 'silver']
-
+colours = ['red', 'blue', 'green', 'pink', 'black', 'yellow', 'orange', 'cyan', 'purple', 'brown', 'grey']
 top = tk.Tk()
 top.title("Game")
 top.geometry("700x500")
-top.configure(bg='#C0C0C0')
+top.configure(bg='#8a8383')
 
 text_color = ""
 time_left = 0
 score = 0
+game_active = False
 
 def countdown():
     global time_left
@@ -22,12 +22,15 @@ def countdown():
     else:
         T.config(text="Game Over")
         L.config(text=f"Score: {score}", fg="black")
+        global game_active
+        game_active = False
 
 def start_timer():
     clear_text()
-    global time_left, score
+    global time_left, score, game_active
     time_left = 30
     score = 0
+    game_active = True
     countdown()
 
 def choose_random_color():
@@ -46,49 +49,52 @@ def game_start():
     display_colored_text()
 
 def check_answer():
-    global score
-    entered_color = A.get("1.0", "end-1c").strip().lower()
-    print(f'entered: {entered_color} correct {text_color.lower()}')
-    if entered_color == text_color.lower():
-        score += 1
-        print("Correct!")
-    else:
-        print("Incorrect! The correct color is:", text_color)
-    print("Score:", score)
-    clear_text()
+    if game_active:
+        global score
+        entered_color = A.get("1.0", "end-1c").strip().lower()
+        print(f'entered: {entered_color} correct {text_color.lower()}')
+        if entered_color == text_color.lower():
+            score += 1
+            print("Correct!")
+        else:
+            print("Incorrect! The correct color is:", text_color)
+        print("Score:", score)
+        clear_text()
 
 def clear_text():
     A.delete('1.0', 'end')  
 
 def switch_color(e):
-    check_answer()
-    display_colored_text()
+    if game_active:
+        check_answer()
+        display_colored_text()
 
 fontObj = tkFont.Font(size=20)
 
 L = tk.Label(top, text="Click the button below to start the game", width=30, height=5, font=fontObj)
 L.place(x=100, y=100)
-L.configure(bg='#C0C0C0')
+L.configure(bg='#8a8383')
 
 S = tk.Button(top, text='Start', command=game_start)
 S.place(x=350, y=250)
-S.configure(bg='#C0C0C0')
+S.configure(bg='#8a8383')
 
 T = tk.Label(text="Time: 30")
 T.place(x=350, y=300)
-T.configure(bg='#C0C0C0')
+T.configure(bg='#8a8383')
 
 L2 = tk.Label(text="Enter the color of the words")
 L2.place(x=350, y=200)
-L2.configure(bg='#C0C0C0')
+L2.configure(bg='#8a8383')
 
 A = tk.Text(height=1, width=10)
 A.place(x=300, y=220)
-A.configure(bg='#C0C0C0')
+A.configure(bg='#8a8383')
 
 top.bind('<Return>', switch_color)
 
 top.mainloop()
+
 
 
 
